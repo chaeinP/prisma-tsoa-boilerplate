@@ -1,0 +1,67 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"ResponsePayload_string_": {
+				"properties": {
+					"result": {
+						"type": "string",
+						"enum": [
+							"SUCCESS"
+						],
+						"nullable": false
+					},
+					"data": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "server",
+		"version": "1.0.0",
+		"description": "codeit-taskify",
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/hello": {
+			"get": {
+				"operationId": "GetHello",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResponsePayload_string_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"/"
+				],
+				"security": [],
+				"parameters": []
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "https://sp-taskify-api.vercel.app/"
+		}
+	]
+}
