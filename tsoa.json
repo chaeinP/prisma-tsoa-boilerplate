@@ -2,19 +2,28 @@
   "basePath": "/",
   "entryFile": "./src/index.ts",
   "noImplicitAdditionalProperties": "silently-remove-extras",
-  "controllerPathGlobs": ["./src/controllers/**/**.controller.ts"],
+  "controllerPathGlobs": ["./src/app/**/**.controller.ts"],
+  "compilerOptions": { "strict": true },
   "spec": {
     "specVersion": 3,
-    "title": "sp-taskify",
-    "summary": "sp-taskify api spec",
+    "title": "sp-slidtodo",
+    "summary": "sp-slidtodo api spec",
     "outputDirectory": "./src",
-    "host": "sp-taskify-api.vercel.app",
-    "schemes": ["https"]
+    "servers": [{ "url": "http://localhost:3000", "description": "localhost" }],
+    "securityDefinitions": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
   },
   "routes": {
     "routesDir": "./src/routes",
     "middleware": "express",
-    "noWriteIfUnchanged": true
+    "iocModule": "./src/ioc/ioc-container",
+    "noWriteIfUnchanged": true,
+    "authenticationModule": "src/middlewares/express-authentication"
   },
   "ignore": ["**/node_modules/**"]
 }

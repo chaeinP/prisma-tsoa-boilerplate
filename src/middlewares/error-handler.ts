@@ -1,10 +1,15 @@
-import { ErrorResponsePayload } from '../common/error-response-payload';
-import { Exception } from '../exceptions/Exception';
-import { ErrorRequestHandler, RequestHandler } from 'express';
+import { ErrorResponsePayload } from '../common/responses/error-response-payload';
+import { Exception } from '../common/exceptions/exception';
+import { ErrorRequestHandler, NextFunction } from 'express';
+import { ValidateError } from 'tsoa';
 
-export const errorHandler: ErrorRequestHandler = (err: Error | Exception, req, res, next) => {
-  let response = new ErrorResponsePayload(err);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const errorHandler: ErrorRequestHandler = (err: Error | Exception, req, res, next: NextFunction) => {
+  console.log(err);
 
-  // 에러 응답 로깅 추가
-  res.status(response.statusCode).send(response);
+  const statusCode =
+    err instanceof Exception ? err.getter().statusCode : err instanceof ValidateError ? err.status : 500;
+  const response = new ErrorResponsePayload(err);
+
+  res.status(statusCode).send(response);
 };

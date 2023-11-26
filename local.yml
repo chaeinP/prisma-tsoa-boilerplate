@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    container_name: 'slidtodo-db'
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: postgres
+      TZ: 'Asia/Seoul'
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  localstack:
+    container_name: 'slidtodo-localstack'
+    image: localstack/localstack:latest
+    ports:
+      - '4567:4566' # Default port forward
+    environment:
+      - SERVICES=s3
+      - EDGE_PORT=4566
+      - DEBUG=1 # Debug level 1 if you want to logs, 0 if you want to disable
+      - START_WEB=0 # Flag to control whether the Web UI should be started in Docker
+      - AWS_ACCESS_KEY_ID=1234
+      - AWS_SECRET_ACCESS_KEY=1234
+      - DEFAULT_REGION=us-east-1
+    volumes:
+      - './.localstack:/var/lib/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - './localstack_s3_init.sh:/etc/localstack/init/ready.d/localstack_s3_init.sh'
+
+volumes:
+  pgdata:

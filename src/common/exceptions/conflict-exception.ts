@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { Exception } from './Exception';
+import { Exception } from './exception';
 
 export class ConflictException extends Exception {
   constructor(message?: string) {

@@ -6,62 +6,352 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ResponsePayload_string_": {
+			"UserServiceResponseDto": {
 				"properties": {
-					"result": {
-						"type": "string",
-						"enum": [
-							"SUCCESS"
-						],
-						"nullable": false
+					"id": {
+						"type": "number",
+						"format": "double"
 					},
-					"data": {
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"email",
+					"name",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponsePayload": {
+				"properties": {
+					"message": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"result"
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginBodyDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserCreateRequstDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"name",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
 	},
 	"info": {
 		"title": "server",
 		"version": "1.0.0",
-		"description": "codeit-taskify",
+		"description": "codeit-slidtodo",
 		"contact": {}
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/hello": {
-			"get": {
-				"operationId": "GetHello",
+		"/{teamId}/auth/login": {
+			"post": {
+				"operationId": "Login",
 				"responses": {
-					"200": {
-						"description": "OK",
+					"201": {
+						"description": "Created",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ResponsePayload_string_"
+									"properties": {
+										"user": {
+											"$ref": "#/components/schemas/UserServiceResponseDto"
+										},
+										"refreshToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"user",
+										"refreshToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequest",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponsePayload"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "이메일 형식으로 작성해 주세요."
+										}
+									},
+									"Example 2": {
+										"value": {
+											"message": "이메일을 입력해 주세요."
+										}
+									},
+									"Example 3": {
+										"value": {
+											"message": "비밀번호를 입력해 주세요."
+										}
+									},
+									"Example 4": {
+										"value": {
+											"message": "비밀번호가 올바르지 않습니다."
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "NotFoundException",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponsePayload"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "가입되지 않은 이메일입니다."
+										}
+									}
 								}
 							}
 						}
 					}
 				},
+				"summary": "로그인",
 				"tags": [
-					"/"
+					"Auth"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "path",
+						"name": "teamId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginBodyDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/{teamId}/auth/tokens": {
+			"post": {
+				"operationId": "Refresh",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"refreshToken": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"refreshToken",
+										"accessToken"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"summary": "토큰 재발급",
+				"tags": [
+					"Auth"
+				],
+				"security": [
+					{
+						"bearerAuth": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "teamId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/{teamId}/user": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserServiceResponseDto"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequest",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponsePayload"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "이메일 형식으로 작성해 주세요."
+										}
+									},
+									"Example 2": {
+										"value": {
+											"message": "이메일을 입력해 주세요."
+										}
+									},
+									"Example 3": {
+										"value": {
+											"message": "이름을 입력해 주세요."
+										}
+									},
+									"Example 4": {
+										"value": {
+											"message": "비밀번호가 8자 이상이 되도록 해 주세요."
+										}
+									}
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "ConflictException",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponsePayload"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "이미 사용 중인 이메일입니다."
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"summary": "회원가입",
+				"tags": [
+					"/user"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "teamId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreateRequstDto"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
 	"servers": [
 		{
-			"url": "https://sp-taskify-api.vercel.app/"
+			"url": "/"
 		}
 	]
 }

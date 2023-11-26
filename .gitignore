@@ -4,3 +4,4 @@ node_modules
 pgdata
 env.prod.sh
 dist
+.localstack

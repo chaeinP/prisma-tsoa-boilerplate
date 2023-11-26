@@ -1,33 +1,49 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "codeit-taskify",
+  "description": "codeit-slidtodo",
   "main": "dist/src/index.js",
   "scripts": {
-    "test": ". ./env.local.sh && jest",
+    "test": ". ./env.local.sh && prisma generate && tsoa spec-and-routes && jest",
     "coverage": "jest --coverage",
     "routes": "tsoa spec-and-routes",
     "compile": "tsc -p ./tsconfig.json && tsc-alias -p ./tsconfig.json",
     "build": "npm run routes && prisma generate && npm run compile",
     "vercel-build": "prisma generate",
-    "prisma:migrate": "npx prisma migrate dev --name",
-    "start:postgres": "docker-compose -f ./postgresql-local.yml -p postgres up -d",
-    "start:local": ". ./env.local.sh && npm run start:postgres && concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
-    "start:prod": ". ./env.prod.sh && concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\""
+    "migrate:local": ". ./env.local.sh && npx prisma migrate dev && prisma generate",
+    "migrate:prod": ". ./env.prod.sh && npx prisma migrate deploy && prisma generate",
+    "ready:local": "docker-compose -f ./local.yml -p slidtodo-local up -d",
+    "start:local": ". ./env.local.sh && npm run ready:local && prisma generate && concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "start:prod": ". ./env.prod.sh && concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "postinstall": "patch-package"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.458.0",
     "@prisma/client": "^5.6.0",
+    "@tsoa/runtime": "5.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.10",
     "express": "^4.18.2",
     "http-status": "^1.7.3",
+    "inversify": "^6.0.2",
+    "inversify-binding-decorators": "^4.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.3",
+    "multer-s3": "^3.0.1",
+    "patch-package": "^8.0.0",
     "swagger-ui-express": "^4.3.0",
     "tsoa": "^5.1.1"
   },
   "devDependencies": {
-    "@tsoa/cli": "^5.1.1",
+    "@faker-js/faker": "^8.3.1",
+    "@tsoa/cli": "5.1.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.10",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/multer-s3": "^3.0.3",
     "@types/node": "^20.9.4",
     "@types/supertest": "^2.0.16",
     "@types/swagger-ui-express": "^4.1.6",
@@ -45,5 +61,9 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2"
+  },
+  "prisma": {
+    "schema": "./src/infrastructure/prisma/schema.prisma",
+    "migrateOutput": "./src/infrastructure/prisma/migrations"
   }
 }

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@tsoa/runtime/dist/decorators/response.d.ts b/node_modules/@tsoa/runtime/dist/decorators/response.d.ts
+index 2c11b1f..4fc9650 100644
+--- a/node_modules/@tsoa/runtime/dist/decorators/response.d.ts
++++ b/node_modules/@tsoa/runtime/dist/decorators/response.d.ts
+@@ -1,7 +1,7 @@
+ import { IsValidHeader } from '../utils/isHeaderType';
+ import { HttpStatusCodeLiteral, HttpStatusCodeStringLiteral, OtherValidOpenApiHttpStatusCode } from '../interfaces/response';
+ export declare function SuccessResponse<HeaderType extends IsValidHeader<HeaderType> = {}>(name: string | number, description?: string, produces?: string | string[]): Function;
+-export declare function Response<ExampleType, HeaderType extends IsValidHeader<HeaderType> = {}>(name: HttpStatusCodeLiteral | HttpStatusCodeStringLiteral | OtherValidOpenApiHttpStatusCode, description?: string, example?: ExampleType, produces?: string | string[]): Function;
++export declare function Response<ExampleType, HeaderType extends IsValidHeader<HeaderType> = {}>(name: HttpStatusCodeLiteral | HttpStatusCodeStringLiteral | OtherValidOpenApiHttpStatusCode, description?: string, examples?: ExampleType[], produces?: string | string[]): Function;
+ /**
+  * Inject a library-agnostic responder function that can be used to construct type-checked (usually error-) responses.
+  *
