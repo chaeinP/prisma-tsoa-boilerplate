@@ -2,18 +2,20 @@
   "basePath": "/",
   "entryFile": "./src/index.ts",
   "noImplicitAdditionalProperties": "silently-remove-extras",
-  "controllerPathGlobs": ["./src/controllers/**/**.controller.ts"],
+  "controllerPathGlobs": ["./src/application/**/**.controller.ts"],
+  "compilerOptions": { "strict": true },
   "spec": {
     "specVersion": 3,
     "title": "sp-taskify",
     "summary": "sp-taskify api spec",
     "outputDirectory": "./src",
-    "host": "sp-taskify-api.vercel.app",
-    "schemes": ["https"]
+    "host": "localhost:3000",
+    "schemes": ["http"]
   },
   "routes": {
     "routesDir": "./src/routes",
     "middleware": "express",
+    "iocModule": "./src/ioc/ioc-container",
     "noWriteIfUnchanged": true
   },
   "ignore": ["**/node_modules/**"]

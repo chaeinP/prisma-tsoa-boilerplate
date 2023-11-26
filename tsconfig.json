@@ -10,6 +10,6 @@
     "strictPropertyInitialization": false,
     "resolveJsonModule": true
   },
-  "include": ["**/*"],
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "include": ["**/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

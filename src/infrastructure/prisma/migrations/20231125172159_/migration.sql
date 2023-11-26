@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "createdAt" SET DEFAULT NOW(),
+ALTER COLUMN "updatedAt" SET DEFAULT NOW();

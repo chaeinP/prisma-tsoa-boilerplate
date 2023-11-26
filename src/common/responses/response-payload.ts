@@ -1,9 +1,9 @@
 export class ResponsePayload<T> {
   result: 'SUCCESS';
-  data?: T;
+  data: T | null;
 
   constructor(data?: T) {
     this.result = 'SUCCESS';
-    if (data) this.data = data;
+    this.data = data ?? null;
   }
 }

@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 RegisterRoutes(app);
+
 app.use(
   '/docs',
   swaggerUI.serve,
@@ -21,6 +22,11 @@ app.use(
 );
 
 app.get('/health', (req, res) => res.send('OK'));
+
+app.use(function notFoundHandler(_req, res) {
+  res.status(404).send('Not Found');
+});
+
 app.use(errorHandler);
 
 export default app;

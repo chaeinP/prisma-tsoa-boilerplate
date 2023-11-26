@@ -10,9 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Test {
+model User {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  teamId  String  @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  nickname  String   @db.VarChar(255)
+  profileImageUrl String? @db.VarChar(255)
+  createdAt DateTime @default(dbgenerated("NOW()"))
   updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
+  deletedAt DateTime? 
 }

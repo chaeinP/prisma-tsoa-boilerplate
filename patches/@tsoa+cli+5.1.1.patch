@@ -1,0 +1,17 @@
+diff --git a/node_modules/@tsoa/cli/dist/metadataGeneration/methodGenerator.js b/node_modules/@tsoa/cli/dist/metadataGeneration/methodGenerator.js
+index c869878..e349197 100644
+--- a/node_modules/@tsoa/cli/dist/metadataGeneration/methodGenerator.js
++++ b/node_modules/@tsoa/cli/dist/metadataGeneration/methodGenerator.js
+@@ -157,10 +157,10 @@ class MethodGenerator {
+             return [];
+         }
+         return decorators.map(decorator => {
+-            const [name, description, example, produces] = (0, decoratorUtils_1.getDecoratorValues)(decorator, this.current.typeChecker);
++            const [name, description, examples, produces] = (0, decoratorUtils_1.getDecoratorValues)(decorator, this.current.typeChecker);
+             return {
+                 description: description || '',
+-                examples: example === undefined ? undefined : [example],
++                examples: examples === undefined ? undefined : [...examples],
+                 name: name || '200',
+                 produces: this.getProducesAdapter(produces),
+                 schema: this.getSchemaFromDecorator(decorator, 0),

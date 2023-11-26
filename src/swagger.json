@@ -6,7 +6,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ResponsePayload_string_": {
+			"ResponsePayload_any_": {
 				"properties": {
 					"result": {
 						"type": "string",
@@ -16,11 +16,102 @@
 						"nullable": false
 					},
 					"data": {
+						"properties": {
+							"updatedAt": {
+								"type": "string",
+								"format": "date-time"
+							},
+							"createdAt": {
+								"type": "string",
+								"format": "date-time"
+							},
+							"profileImageUrl": {
+								"type": "string",
+								"nullable": true
+							},
+							"nickname": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"updatedAt",
+							"createdAt",
+							"profileImageUrl",
+							"nickname",
+							"email",
+							"id"
+						],
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"result",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponsePayload": {
+				"properties": {
+					"result": {
+						"type": "string",
+						"enum": [
+							"FAILED"
+						],
+						"nullable": false
+					},
+					"data": {
+						"properties": {
+							"details": {
+								"nullable": true
+							},
+							"message": {
+								"type": "string"
+							},
+							"statusCode": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"details",
+							"message",
+							"statusCode"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"result",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserCreateRequstDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"nickname": {
+						"type": "string"
+					},
+					"password": {
 						"type": "string"
 					}
 				},
 				"required": [
-					"result"
+					"email",
+					"nickname",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -36,32 +127,123 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/hello": {
-			"get": {
-				"operationId": "GetHello",
+		"/{teamId}/users": {
+			"post": {
+				"operationId": "Create",
 				"responses": {
-					"200": {
-						"description": "OK",
+					"201": {
+						"description": "Created",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ResponsePayload_string_"
+									"$ref": "#/components/schemas/ResponsePayload_any_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequest",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponsePayload"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "이메일 형식으로 작성해주세요.",
+												"details": null
+											}
+										}
+									},
+									"Example 2": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "이메일을 입력해주세요.",
+												"details": null
+											}
+										}
+									},
+									"Example 3": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "닉네임은 10자 이하로 작성해주세요.",
+												"details": null
+											}
+										}
+									},
+									"Example 4": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "닉네임을 입력해주세요.",
+												"details": null
+											}
+										}
+									},
+									"Example 5": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "비밀번호는 8자 이상 입력해주세요.",
+												"details": null
+											}
+										}
+									},
+									"Example 6": {
+										"value": {
+											"result": "FAILED",
+											"data": {
+												"statusCode": 400,
+												"message": "비밀번호를 입력해주세요.",
+												"details": null
+											}
+										}
+									}
 								}
 							}
 						}
 					}
 				},
 				"tags": [
-					"/"
+					"/users"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "path",
+						"name": "teamId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreateRequstDto"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
 	"servers": [
 		{
-			"url": "https://sp-taskify-api.vercel.app/"
+			"url": "http://localhost:3000/"
 		}
 	]
 }

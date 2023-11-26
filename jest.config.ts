@@ -5,14 +5,9 @@ const config: Config.InitialOptions = {
   testEnvironment: 'node',
   testMatch: ['**/**.*spec.ts'],
   transform: {
-    '^.+\\.ts?$': 'ts-jest',
+    '^.+\\.ts?$': ['ts-jest', { isolatedModules: true }],
   },
   collectCoverageFrom: ['src/**'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: false,
-    },
-  },
 };
 
 export default config;
